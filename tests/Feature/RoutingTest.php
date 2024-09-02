@@ -25,4 +25,31 @@ class RoutingTest extends TestCase
 
         $this->get('/404')->assertSeeText("i'm going back to 404");
     }
+
+    public function testRouteParam()
+    {
+        $this->get('/product/1')->assertSeeText("Product 1");
+        $this->get('/product/1/items/yyyy')->assertSeeText("Product 1, item yyyy");
+    }
+
+    public function testRouteParamRegex()
+    {
+        $this->get('categories/21')->assertSeeText('Category 21');
+
+        $this->get('categories/fool')->assertSeeText("i'm going back to 404");
+    }
+
+    public function testRouteParamOptional()
+    {
+        $this->get('user')->assertSeeText('User 404');
+
+        $this->get('user/21')->assertSeeText("User 21");
+    }
+
+    public function  testRouteConflict()
+    {
+        $this->get('conflict/moretti')->assertSeeText('Conflict moretti');
+
+        $this->get('conflict/fool')->assertSeeText('Conflict Fool');
+    }
 }
