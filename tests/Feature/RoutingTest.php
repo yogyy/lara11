@@ -52,4 +52,11 @@ class RoutingTest extends TestCase
 
         $this->get('conflict/fool')->assertSeeText('Conflict Fool');
     }
+
+    public function  testNamedRoute()
+    {
+        $this->get('produk/12345')->assertSeeText('product/12345');
+
+        $this->get('produk-redrect/12345')->assertSeeText('product/12345');
+    }
 }
