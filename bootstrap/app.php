@@ -1,9 +1,12 @@
 <?php
 
+use App\Exceptions\ValidationException;
 use App\Http\Middleware\ContohMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
+use PHPUnit\Runner\InvalidOrderException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -30,5 +33,16 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->reportable(function (Throwable $e) {
+            // var_dump($e);
+            return false;
+        });
+
+        $exceptions->dontReport([
+            ValidationException::class
+        ]);
+
+        $exceptions->renderable(function (ValidationException $e, Request $request) {
+            return response("Bad Request", 400);
+        });
     })->create();
